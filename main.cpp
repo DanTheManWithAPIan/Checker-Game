@@ -10,29 +10,32 @@
 #define WIN_HEIGHT 1000
 #define PI 3.1415926535
 
-class Player_pieces {
-    float piece_locations;
-    int num_of_pieces;
+void mouse_get_piece() {
+    
+}
 
-    public:
-        void display_red_pieces(GLfloat x, GLfloat y, GLfloat radius){
-            int triangle_amount = 20; //# of triangles used to draw circle
 
-            //GLfloat radius = 0.8f; //radius
-            float twice_pi = 2.0f * PI;
-
-            glColor3f(1.0, 0.0, 0.0);
-            glBegin(GL_TRIANGLE_FAN);
-            glVertex2f(x, y); // center of circle
-            for(int i = 0; i <= triangle_amount; i++) {
-                glVertex2f(
-                    x + (radius * std::cos(i *  twice_pi / triangle_amount)),
-                    y + (radius * std::sin(i * twice_pi / triangle_amount))
-                );
-            }
-            glEnd();
-        };
-};
+void display_red_pieces(float piece_locations[12][2], int num_of_pieces, float red, float green, float blue) {
+    // Number of triangles to make up circle
+    int triangle_amount = 20; //# of triangles used to draw circle
+    // Radius of Circles
+    float radius = .1;
+    // Double PI
+    float twice_pi = 2.0f * PI;
+    // Circle Color
+    glColor3f(red, green, blue);
+    // Loops to display circles
+    for (int loc = 0; loc < num_of_pieces; loc++) {
+        glBegin(GL_TRIANGLE_FAN);
+        for (int i = 0; i <= triangle_amount; i++) {
+            glVertex2f(
+                    piece_locations[loc][0] + (radius * std::cos(i * twice_pi / triangle_amount)),
+                    piece_locations[loc][1] + (radius * std::sin(i * twice_pi / triangle_amount))
+                    );
+        }
+        glEnd();
+    }
+}
 
 
 void display_checker_board() {
@@ -86,8 +89,35 @@ void display_checker_board() {
 
 int main (int ArgCount, char **Args)
 {
-    Player_pieces p1{};
-    Player_pieces p2{};
+    int p1_piece_count = 12;
+    int p2_piece_count = 12;
+
+    float p1_locations[12][2] = {{-0.875f, -0.875f},
+                             {-0.375f, -0.875f},
+                             {0.125f, -0.875f},
+                             {0.625f, -0.875f},
+                             {-0.625f, -0.625f},
+                             {-0.125f, -0.625f},
+                             {0.375f, -0.625f},
+                             {0.875f, -0.625f},
+                             {-0.875f, -0.375f},
+                             {-0.375f, -0.375f},
+                             {0.125f, -0.375f},
+                             {0.625f, -0.375f}};
+
+    float p2_locations[12][2] = {{-0.625f, 0.875f},
+                                {-0.125f, 0.875f},
+                                {0.375f, 0.875f},
+                                {0.875f, 0.875f},
+                                {-0.875f, 0.625f},
+                                {-0.375f, 0.625f},
+                                {0.125f, 0.625f},
+                                {0.625f, 0.625f},
+                                {-0.625f, 0.375f},
+                                {-0.125f, 0.375f},
+                                {0.375f, 0.375f},
+                                {0.875f, 0.375f}};
+
     uint32_t windowFlags = SDL_WINDOW_OPENGL;
     SDL_Window* window =
             SDL_CreateWindow(
@@ -144,7 +174,8 @@ int main (int ArgCount, char **Args)
         glClearColor(red, green, blue, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         display_checker_board();
-        p1.display_red_pieces(-0.875, -0.875, -.1);
+        display_red_pieces(p1_locations, p1_piece_count, 1.0f, 0.0f, 0.0f);
+        display_red_pieces(p2_locations, p2_piece_count, .0f, 0.0f, 1.0f);
         SDL_GL_SwapWindow(window);
     }
     return 0;
