@@ -6,7 +6,7 @@ I am programming this on Clion which has OpenGL natively installed. You will nee
 Link to SDL2:
 https://github.com/libsdl-org/SDL/releases/tag/release-2.26.3
 
-For windows get the ming x86. 
+For windows get the mingw version. 
 
 If you are having compiler issues make sure your pathing and naming is correct under the CMakeLists.txt file.
 
