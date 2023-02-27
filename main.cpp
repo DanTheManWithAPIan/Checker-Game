@@ -8,7 +8,7 @@
 #define WIN_HEIGHT 1000
 
 void display_checker_pieces() {
-    
+
 }
 
 
