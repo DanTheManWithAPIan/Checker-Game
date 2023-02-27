@@ -7,33 +7,64 @@
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 1000
 
-void display_square() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(0.0, 0.0, 0.0);
-    glBegin(GL_POLYGON);
-    glVertex2i(0, 0); // Bottom left
-    glVertex2i(0, 2); // top left
-    glVertex2i(2, 2); // top right
-    glVertex2i(2, 0); // bottom right
-    glEnd();
-    glFlush();
+void display_checker_pieces() {
+    
 }
 
-void display_checker_board() {
-    int squares = 8;
-    int matrix[80][2] = {};
 
-    for (float i = -1; i < 1; i += .250) {
-        for (float j = -1; j < 1; j += .250) {
-            
+
+void display_checker_board() {
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0);
+    int square_counter = 1;
+    int row_counter = 1;
+
+    for (float y = -1; y < 1; y += .250) {
+        for (float x = -1; x < 1; x += .250) {
+            if (row_counter % 2 == 0) {
+                if (square_counter % 2 == 1) {
+                    glBegin(GL_POLYGON);
+                    glVertex2f(x, y); // Bottom Left
+                    glVertex2f(x, y + .250f); // Top left
+                    glVertex2f(x + .250f, y + .250f); // Top Right
+                    glVertex2f(x + .250f, y); // Bottom Right
+
+                    glEnd();
+                    glFlush();
+
+                    square_counter += 1;
+                } else {
+                    square_counter += 1;
+                }
+            } else {
+                if (square_counter % 2 == 0) {
+                    glBegin(GL_POLYGON);
+                    glVertex2f(x, y); // Bottom Left
+                    glVertex2f(x, y + .250f); // Top left
+                    glVertex2f(x + .250f, y + .250f); // Top Right
+                    glVertex2f(x + .250f, y); // Bottom Right
+
+                    glEnd();
+                    glFlush();
+
+                    square_counter += 1;
+            } else {
+                square_counter += 1;
+                }
+            }
         }
+    if (square_counter == 8) {
+        square_counter = 1;
+    }
+        row_counter += 1;
     }
 }
 
 
 int main (int ArgCount, char **Args)
 {
-    class sqaure {
+    class square {
     public:
         int x = 500;
         int y = 500;
@@ -56,9 +87,9 @@ int main (int ArgCount, char **Args)
 
     int32_t running = 1;
     int32_t fullscreen = 0;
-    float red = 1.0f;
-    float green = 1.0f;
-    float blue = 1.0f;
+    float red = 0.0f;
+    float green = 0.0f;
+    float blue = 0.0f;
 
     while (running)
     {
@@ -89,11 +120,14 @@ int main (int ArgCount, char **Args)
             } else if (Event.type == SDL_QUIT) {
                 running = 0;
             }
+        if (Event.type == SDL_MOUSEBUTTONDOWN) {
+
         }
-        glViewport(-500, -500, WIN_WIDTH, WIN_HEIGHT);
+        }
+        glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
         glClearColor(red, green, blue, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        display_square();
+        display_checker_board();
         SDL_GL_SwapWindow(window);
     }
     return 0;
