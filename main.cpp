@@ -1,16 +1,38 @@
+#include <cmath>
 #include <cstdint>
 #include <cassert>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <iostream>
+#include <cmath>
 
 #define WIN_WIDTH 1000
 #define WIN_HEIGHT 1000
+#define PI 3.1415926535
 
-void display_checker_pieces() {
+class Player_pieces {
+    float piece_locations;
+    int num_of_pieces;
 
-}
+    public:
+        void display_red_pieces(GLfloat x, GLfloat y, GLfloat radius){
+            int triangle_amount = 20; //# of triangles used to draw circle
 
+            //GLfloat radius = 0.8f; //radius
+            float twice_pi = 2.0f * PI;
+
+            glColor3f(1.0, 0.0, 0.0);
+            glBegin(GL_TRIANGLE_FAN);
+            glVertex2f(x, y); // center of circle
+            for(int i = 0; i <= triangle_amount; i++) {
+                glVertex2f(
+                    x + (radius * std::cos(i *  twice_pi / triangle_amount)),
+                    y + (radius * std::sin(i * twice_pi / triangle_amount))
+                );
+            }
+            glEnd();
+        };
+};
 
 
 void display_checker_board() {
@@ -20,15 +42,15 @@ void display_checker_board() {
     int square_counter = 1;
     int row_counter = 1;
 
-    for (float y = -1; y < 1; y += .250) {
-        for (float x = -1; x < 1; x += .250) {
+    for (float y = -1; y < 1; y += 0.250f) {
+        for (float x = -1; x < 1; x += 0.250f) {
             if (row_counter % 2 == 0) {
                 if (square_counter % 2 == 1) {
                     glBegin(GL_POLYGON);
                     glVertex2f(x, y); // Bottom Left
-                    glVertex2f(x, y + .250f); // Top left
-                    glVertex2f(x + .250f, y + .250f); // Top Right
-                    glVertex2f(x + .250f, y); // Bottom Right
+                    glVertex2f(x, y + 0.250f); // Top left
+                    glVertex2f(x + 0.250f, y + 0.250f); // Top Right
+                    glVertex2f(x + 0.250f, y); // Bottom Right
 
                     glEnd();
                     glFlush();
@@ -41,9 +63,9 @@ void display_checker_board() {
                 if (square_counter % 2 == 0) {
                     glBegin(GL_POLYGON);
                     glVertex2f(x, y); // Bottom Left
-                    glVertex2f(x, y + .250f); // Top left
-                    glVertex2f(x + .250f, y + .250f); // Top Right
-                    glVertex2f(x + .250f, y); // Bottom Right
+                    glVertex2f(x, y + 0.250f); // Top left
+                    glVertex2f(x + 0.250f, y + 0.250f); // Top Right
+                    glVertex2f(x + 0.250f, y); // Bottom Right
 
                     glEnd();
                     glFlush();
@@ -64,14 +86,8 @@ void display_checker_board() {
 
 int main (int ArgCount, char **Args)
 {
-    class square {
-    public:
-        int x = 500;
-        int y = 500;
-        int width = 50;
-        int height = 50;
-    };
-
+    Player_pieces p1{};
+    Player_pieces p2{};
     uint32_t windowFlags = SDL_WINDOW_OPENGL;
     SDL_Window* window =
             SDL_CreateWindow(
@@ -128,6 +144,7 @@ int main (int ArgCount, char **Args)
         glClearColor(red, green, blue, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         display_checker_board();
+        p1.display_red_pieces(-0.875, -0.875, -.1);
         SDL_GL_SwapWindow(window);
     }
     return 0;
