@@ -9,7 +9,8 @@
 #define WIN_HEIGHT 1000
 #define PI 3.1415926535
 
-bool move_piece(int mouse_x, int mouse_y) {
+
+bool is_cursor_on_piece(int mouse_x, int mouse_y) {
     static int valid_squares[32][2][2] = {}; // Position Matrix for storing valid squares players can move too.
 
     int row_counter = 1; // Row Counter
@@ -57,10 +58,119 @@ bool move_piece(int mouse_x, int mouse_y) {
     for (int i = 0; i < sizeof(valid_squares); i++) {
         if (mouse_x > valid_squares[i][0][0] && mouse_x < valid_squares[i][1][0]
          && mouse_y > valid_squares[i][1][1] && mouse_y < valid_squares[i][0][1]) {
-            return valid_squares[i][0];
+            return true;
+        } else {
+            return false;
         }
     }
 }
+
+bool is_piece_on_square(float p_locations[12][2]) {
+
+    static float valid_squares[32][2][2] = {}; // Position Matrix for storing valid squares players can move too.
+
+    int square_counter = 1; // Square counter for each row
+    int row_counter = 1; // Row counter
+    int index_counter = 0;
+    // For loops for displaying checkerboard
+    for (float y = -1; y < 1; y += 0.250f) {
+        for (float x = -1; x < 1; x += 0.250f) {
+            if (row_counter % 2 == 0) {
+                if (square_counter % 2 == 0) {
+                    valid_squares[index_counter][0][0] = x + .250f; // Top Right x
+                    valid_squares[index_counter][0][1] = y + .250f; // Top Right y
+                    valid_squares[index_counter][1][0] = x; // Bottom Left x
+                    valid_squares[index_counter][1][1] = y; // Bottom Left y
+                    index_counter += 1;
+                    square_counter += 1;
+                } else {
+                    square_counter += 1;
+                }
+            } else {
+                if (square_counter % 2 == 1) {
+                    valid_squares[index_counter][0][0] = x + .250f; // Top Right x
+                    valid_squares[index_counter][0][1] = y + .250f; // Top Right y
+                    valid_squares[index_counter][1][0] = x; // Bottom Left x
+                    valid_squares[index_counter][1][1] = y; // Bottom Left y
+                    index_counter += 1;
+                    square_counter += 1;
+                } else {
+                    square_counter += 1;
+                }
+            }
+        }
+        if (square_counter == 8) {
+            square_counter = 1;
+        }
+        row_counter += 1;
+    }
+    for (int i = 0; i <= 64; i++) {
+        std::cout << valid_squares[i][0][0] << " " << valid_squares[i][0][1] << std::endl;
+        //for (int j = 0; j <= 12; j++) {
+            //if (p_locations[j][0] < valid_squares[i][0][0] && p_locations[j][0] > valid_squares[i][1][0]
+                //&& p_locations[j][1] > valid_squares[i][1][1] && p_locations[j][1] < valid_squares[i][0][1]) {
+                //return true;
+            //} else {
+                //return false;
+            //}
+        //}
+    }
+}
+
+
+bool is_cursor_on_square(float mouse_x, float mouse_y, float piece_locations[12][2]) {
+
+    static float valid_squares[32][2][2] = {}; // Position Matrix for storing valid squares players can move too.
+
+    int square_counter = 1; // Square counter for each row
+    int row_counter = 1; // Row counter
+    int index_counter = 0;
+    // For loops for displaying checkerboard
+    for (float y = -1; y < 1; y += 0.250f) {
+        for (float x = -1; x < 1; x += 0.250f) {
+            if (row_counter % 2 == 0) {
+                if (square_counter % 2 == 0) {
+                    valid_squares[index_counter][0][0] = x + .250f; // Top Right x
+                    valid_squares[index_counter][0][1] = y + .250f; // Top Right y
+                    valid_squares[index_counter][1][0] = x; // Bottom Left x
+                    valid_squares[index_counter][1][1] = y; // Bottom Left y
+                    index_counter += 1;
+                    square_counter += 1;
+                } else {
+                    square_counter += 1;
+                }
+            } else {
+                if (square_counter % 2 == 1) {
+                    valid_squares[index_counter][0][0] = x + .250f; // Top Right x
+                    valid_squares[index_counter][0][1] = y + .250f; // Top Right y
+                    valid_squares[index_counter][1][0] = x; // Bottom Left x
+                    valid_squares[index_counter][1][1] = y; // Bottom Left y
+                    index_counter += 1;
+                    square_counter += 1;
+                } else {
+                    square_counter += 1;
+                }
+            }
+        }
+        if (square_counter == 8) {
+            square_counter = 1;
+        }
+        row_counter += 1;
+
+        }
+    for (int i = 0; i <= 32; i++) {
+        //std::cout << valid_squares[i][0][0] << " " << valid_squares[i][0][1] << std::endl;
+        //if (mouse_x < valid_squares[i][0][0] && mouse_x > valid_squares[i][1][0]
+           //&& mouse_y > valid_squares[i][1][1] && mouse_y < valid_squares[i][0][1]) {
+            //return true;
+        //} else {
+            //return false;
+        //}
+    }
+}
+
+
+
 
 void display_pieces(float piece_locations[12][2], int num_of_pieces, float red, float green, float blue) {
     int triangle_amount = 20; //# of triangles used to draw circle
@@ -86,7 +196,7 @@ void display_checker_board() {
     glColor3f(1.0, 1.0, 1.0); // Background color
     int square_counter = 1; // Square counter for each row
     int row_counter = 1; // Row counter
-    // For loops for displaying checker board
+    // For loops for displaying checkerboard
     for (float y = -1; y < 1; y += 0.250f) {
         for (float x = -1; x < 1; x += 0.250f) {
             if (row_counter % 2 == 0) {
@@ -159,7 +269,7 @@ int main (int ArgCount, char **Args)
     int p1_piece_count = 12; // Player piece counts
     int p2_piece_count = 12;
 
-    float p1_locations[12][2] = {{-0.875f, -0.875f}, // Player 1 locations
+    float p1_locations[12][2] = {{-0.875f, -0.875f}, // Player 1 locations (x, y)
                                  {-0.375f, -0.875f},
                                  {0.125f, -0.875f},
                                  {0.625f, -0.875f},
@@ -172,7 +282,7 @@ int main (int ArgCount, char **Args)
                                  {0.125f, -0.375f},
                                  {0.625f, -0.375f}};
 
-    float p2_locations[12][2] = {{-0.625f, 0.875f}, // Player 2 locations
+    float p2_locations[12][2] = {{-0.625f, 0.875f}, // Player 2 locations (x, y)
                                  {-0.125f, 0.875f},
                                  {0.375f, 0.875f},
                                  {0.875f, 0.875f},
@@ -217,7 +327,10 @@ int main (int ArgCount, char **Args)
             if (Event.type == SDL_MOUSEBUTTONDOWN) {
                 int mouse_x, mouse_y; // Mouse coordinate variables
                 SDL_GetMouseState(&mouse_x, &mouse_y); // Getting the coordinates of the mouse (x, y)
-                move_piece(mouse_x, mouse_y);
+                float x = float(mouse_x) * 2 / 1000 - 1; // Formula for coordinate plane
+                float y = float(-mouse_y) * 2 / 1000 + 1;
+                is_cursor_on_square(x, y, p1_locations);
+                is_piece_on_square(p1_locations);
             }
         }
         glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT); // OpenGL Viewport- (-1, -1) is bottom left, (1, 1) is top right
