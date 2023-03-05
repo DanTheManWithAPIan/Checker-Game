@@ -159,9 +159,6 @@ int main (int ArgCount, char **Args)
     int p1_piece_count = 12; // Player piece counts
     int p2_piece_count = 12;
 
-    int p_turn = 0; // 0 is red player, 1 is blue player
-
-
     float p1_locations[12][2] = {{-0.875f, -0.875f}, // Player 1 locations (x, y)
                                  {-0.375f, -0.875f},
                                  {0.125f, -0.875f},
@@ -192,6 +189,8 @@ int main (int ArgCount, char **Args)
 
     int p1_array_length = sizeof(p1_locations) / 8; // Length of player 1's array
     int p2_array_length = sizeof(p2_locations) / 8; // Length of player 1's array
+
+    int p_turn = 0; // 0 is red player, 1 is blue player
 
     int orig_index = 0;
     float orig_x = 0;
@@ -284,29 +283,34 @@ while (running) {
             std::cout << "Mouse x: " << x << std::endl;
             std::cout << "Mouse y: " << y << std::endl;
 
-            if (select_piece(x, y, p1_locations) && p_turn == 0) {
-                p_mov = 1;
-                for (int i = 0; i < p1_array_length; i++) {
-                    if (x < p1_locations[i][0] + 0.1f && y < p1_locations[i][1] + 0.1f
-                        && x > p1_locations[i][0] - 0.1f && y > p1_locations[i][1] - 0.1f) {
-                        orig_x = p1_locations[i][0];
-                        orig_y = p1_locations[i][1];
-                        orig_index = i;
-                        p1_locations[i][0] = -10;
-                        p1_locations[i][1] = -10;
+            if (p_turn == 0) {
+                if (select_piece(x, y, p1_locations)) {
+                    p_mov = 1;
+                    for (int i = 0; i < p1_array_length; i++) {
+                        if (x < p1_locations[i][0] + 0.1f && y < p1_locations[i][1] + 0.1f
+                            && x > p1_locations[i][0] - 0.1f && y > p1_locations[i][1] - 0.1f) {
+                            orig_x = p1_locations[i][0];
+                            orig_y = p1_locations[i][1];
+                            orig_index = i;
+                            p1_locations[i][0] = -10;
+                            p1_locations[i][1] = -10;
+                            break;
+                        }
                     }
                 }
-            }
-            if (select_piece(x, y, p1_locations) && p_turn == 1) {
-                p_mov = 1;
-                for (int i = 0; i < p2_array_length; i++) {
-                    if (x < p2_locations[i][0] + 0.1f && y < p2_locations[i][1] + 0.1f
-                        && x > p2_locations[i][0] - 0.1f && y > p2_locations[i][1] - 0.1f) {
-                        orig_x = p2_locations[i][0];
-                        orig_y = p2_locations[i][1];
-                        orig_index = i;
-                        p2_locations[i][0] = -10;
-                        p2_locations[i][1] = -10;
+            } else {
+                if (select_piece(x, y, p2_locations)) {
+                    p_mov = 1;
+                    for (int i = 0; i < p2_array_length; i++) {
+                        if (x < p2_locations[i][0] + 0.1f && y < p2_locations[i][1] + 0.1f
+                            && x > p2_locations[i][0] - 0.1f && y > p2_locations[i][1] - 0.1f) {
+                            orig_x = p2_locations[i][0];
+                            orig_y = p2_locations[i][1];
+                            orig_index = i;
+                            p2_locations[i][0] = -10;
+                            p2_locations[i][1] = -10;
+                            break;
+                        }
                     }
                 }
             }
@@ -325,9 +329,9 @@ while (running) {
                                   << valid_squares[i][2] << " " << valid_squares[i][3] << std::endl;
                         p1_locations[orig_index][0] = valid_squares[i][0] - .125f;
                         p1_locations[orig_index][1] = valid_squares[i][1] - .125f;
+                        p_turn = 1;
                     }
                 }
-            p_turn = 1;
             } else {
                 for (int i = 0; i < num_of_sq; i++) {
                     if (x < valid_squares[i][0] && y < valid_squares[i][1]
