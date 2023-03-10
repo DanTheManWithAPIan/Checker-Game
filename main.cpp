@@ -369,26 +369,38 @@ int main (int ArgCount, char **Args) {
                         int square = which_square(x, y, valid_squares);
                         std::cout << square << " " << original_square << std::endl;
                         if (!is_piece_on_square(blue_locations, valid_squares, square)
-                            && !is_piece_on_square(red_locations, valid_squares, square)) {
+                            && !is_piece_on_square(red_locations, valid_squares, square)
+                            && original_square != square) {
+
                             std::cout << "Piece is not on square" << std::endl;
                             r_turn = 0;
                             red_locations[original_index][0] = valid_squares[square][0] - 0.125f;
                             red_locations[original_index][1] = valid_squares[square][1] - 0.125f;
+
                         } else {
+
                             std::cout << "Piece is on square" << std::endl;
                             red_locations[original_index][0] = red_original_x;
                             red_locations[original_index][1] = red_original_y;
+
                         }
                     } else {
+
                         red_locations[original_index][0] = red_original_x;
                         red_locations[original_index][1] = red_original_y;
+
                     }
                 } else {
+
                     if (is_curs_on_piece(x, y, valid_squares)) {
+
                         int square = which_square(x, y, valid_squares);
                         std::cout << square << " " << original_square << std::endl;
+
                         if (!is_piece_on_square(blue_locations, valid_squares, square)
-                            && !is_piece_on_square(red_locations, valid_squares, square)) {
+                            && !is_piece_on_square(red_locations, valid_squares, square)
+                            && original_square != square) {
+
                             r_turn = 1;
                             std::cout << "Piece is not on square" << std::endl;
                             blue_locations[original_index][0] = valid_squares[square][0] - 0.125f;
