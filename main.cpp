@@ -312,7 +312,7 @@ int main (int ArgCount, char **Args) {
                 if (r_turn == 1) {
                     if (select_piece(x, y, red_locations)) {
 
-                        //std::cout << "Mouse x: " << mouse_x << std::endl;
+                        std::cout << "Mouse x: " << mouse_x << std::endl;
                         //std::cout << "Mouse y: " << mouse_y << std::endl;
 
                         for (int i = 0; i < red_player_length; i++) {
@@ -328,6 +328,7 @@ int main (int ArgCount, char **Args) {
                                 red_locations[i][1] = -10;
                                 original_square = which_square(x, y, valid_squares);
 
+                                found = 1;
                                 //std::cout << " Original x: " << original_x << " Original y:  " << original_y
                                 //          << " Original index: " << original_index << std::endl;
                             }
@@ -352,6 +353,8 @@ int main (int ArgCount, char **Args) {
                                     blue_locations[i][0] = -10;
                                     blue_locations[i][1] = -10;
                                     original_square = which_square(x, y, valid_squares);
+
+                                    found = 1;
                                     //std::cout << "Original x: " << abs(original_x) << " Original y:  " << abs(original_y)
                                     //<< " Original index: " << original_index << std::endl;
                             }
@@ -365,6 +368,7 @@ int main (int ArgCount, char **Args) {
                 p_mov = 0;
 
                 if (r_turn == 1) {
+                    std::cout << "penis" << std::endl;
                     if (is_curs_on_piece(x, y, valid_squares)) {
                         int square = which_square(x, y, valid_squares);
                         std::cout << square << " " << original_square << std::endl;
@@ -373,10 +377,12 @@ int main (int ArgCount, char **Args) {
                             && original_square != square) {
 
                             std::cout << "Piece is not on square" << std::endl;
-                            r_turn = 0;
-                            red_locations[original_index][0] = valid_squares[square][0] - 0.125f;
-                            red_locations[original_index][1] = valid_squares[square][1] - 0.125f;
-
+                            if (found) {
+                                red_locations[original_index][0] = valid_squares[square][0] - 0.125f;
+                                red_locations[original_index][1] = valid_squares[square][1] - 0.125f;
+                                r_turn = 0;
+                            }
+                            found = 0;
                         } else {
 
                             std::cout << "Piece is on square" << std::endl;
@@ -400,12 +406,15 @@ int main (int ArgCount, char **Args) {
                         if (!is_piece_on_square(blue_locations, valid_squares, square)
                             && !is_piece_on_square(red_locations, valid_squares, square)
                             && original_square != square) {
-
-                            r_turn = 1;
                             std::cout << "Piece is not on square" << std::endl;
-                            blue_locations[original_index][0] = valid_squares[square][0] - 0.125f;
-                            blue_locations[original_index][1] = valid_squares[square][1] - 0.125f;
-                        } else {
+
+                            if (found) {
+                                blue_locations[original_index][0] = valid_squares[square][0] - 0.125f;
+                                blue_locations[original_index][1] = valid_squares[square][1] - 0.125f;
+                                r_turn = 1;
+                            }
+                            found = 0;
+                            } else {
                             std::cout << "Piece is on square" << std::endl;
                             blue_locations[original_index][0] = blue_original_x;
                             blue_locations[original_index][1] = blue_original_y;
